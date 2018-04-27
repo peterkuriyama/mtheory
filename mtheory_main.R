@@ -3,21 +3,59 @@
 setwd("C://Users//Peter//Dropbox//postdoc//calcofi")
 setwd("/Users/peterkuriyama/Dropbox/postdoc/calcofi/mtheory")
 
+load_all()
+
 library(devtools)
 library(deSolve)
 library(parallel)
 library(plyr)
 library(tidyverse)
 library(rEDM)
+library(reshape2)
+
 #----------------------------------------------------------------------------------------
 #Simulate three species time series
 
-samps <- generate_data(seed = 300, nsamples = 6, 
-  state = c(X = 1, Y = 1, Z = .5))
+##Add error to the time series
+# ts_err <- ts + rnorm(length(ts), sd = sd(ts) * 0.2)
+# smap_output_err <- s_map(ts_err, lib, pred, E = 2)
+# plot(smap_output_err$theta, smap_output_err$rho, type = "l", xlab = "Nonlinearity (theta)", 
+#     ylab = "Forecast Skill (rho)")
+##
 
+samps <- generate_data(seed = 500, nsamples = 12, 
+  state = c(X = 1, Y = 1, Z = 1))
+
+#Apply simplex to sampled data
+temp <- samps$samps %>% filter(pars == 1)
+temp <- dcast(temp, pars + time ~ variable, value.var = 'value')
+
+#sample every 1000 values
+temp <- temp[seq(1, 100000, by = 100), ]
+lib <- c(1, 100)
+pred <- c(801, 900)
+
+tt <- simplex(temp$Y, lib, pred, stats_only = FALSE)
+tt
+
+#----------------------------------------------------------------------------------------
 #Plot the time series in ggplot
 samps$samps  %>% ggplot(aes(x = time, y = value)) +
     geom_line(aes(colour = variable)) + facet_wrap(~ pars, scales = 'free') 
+samps$samps$time <- samps$samps$time * 100
+
+
+samps$samps 
+samps
+
+
+lib <- c(1, 100)
+pred <- c(901, 1000)
+
+simplex_output <- simplex(samps$samps %>% filter(pars == 1), lib, pred, stats_only = FALSE)
+simplex_output <- simplex(ts, lib, pred)
+
+
 
 #----------------------------------------------------------------------------------------
 #Write the parallelization with dopar
