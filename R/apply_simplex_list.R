@@ -11,7 +11,7 @@
 apply_simplex_list <- function(E, lib, pred, samp_ts){
   ss <- lapply(samp_ts, FUN = function(yy){
     #Apply simplex to elements of the list
-    temp <- apply_simplex(E = E, lib = lib, pred = cpred,
+    temp <- apply_simplex(E = E, lib = lib, pred = pred,
       dat_in = yy)
     return(temp)
   })
