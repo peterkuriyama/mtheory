@@ -2,4 +2,5 @@
 
 export(apply_simplex)
 export(generate_data)
+export(sample_data)
 export(simplex_list)
