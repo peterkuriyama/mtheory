@@ -56,14 +56,28 @@ generate_data <- function(nsamples, seed = 301, ncores = 6,
   #------------------------------------------------------
   #Simulate the data
   #Specify as a list
-  samps <- mclapply(1:nsamples, FUN = function(xx){
+  
+  cl <- makeCluster(ncores)
+  registerDoParallel(cl)
+  
+  samps <- foreach::foreach(xx = 1:nsamples, 
+    .packages = c("deSolve", "dplyr", "reshape2")) %dopar% {
     temp <- pars[xx, ]
     parameters <- c(a1 = temp$a1s, a2 = temp$a2s, b1 = temp$b1s,
       b2 = temp$b2s, d1 = temp$d1s, d2 = temp$d2s, F = temp$F)
-    
-    # times <- seq(.01, 1000, by = .01)
     out <- ode(y = state, times = times, func = hastings, parms = parameters)
-  }, mc.cores = ncores)
+  }
+    
+  stopCluster(cl)
+  
+  # samps <- mclapply(1:nsamples, FUN = function(xx){
+  #   temp <- pars[xx, ]
+  #   parameters <- c(a1 = temp$a1s, a2 = temp$a2s, b1 = temp$b1s,
+  #     b2 = temp$b2s, d1 = temp$d1s, d2 = temp$d2s, F = temp$F)
+    
+  #   # times <- seq(.01, 1000, by = .01)
+  #   out <- ode(y = state, times = times, func = hastings, parms = parameters)
+  # }, mc.cores = ncores)
 
   #------------------------------------------------------
   #Format output
