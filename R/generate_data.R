@@ -18,7 +18,7 @@
 #d2: 0.007-0.013
 #F: 0.025 to 0.075
 generate_data <- function(nsamples, seed = 301, ncores = 6,
-  state = c(X = 1, Y = 1, Z = 1)){
+  state = c(X = 1, Y = 1, Z = 1), times = seq(1, 1000, by = 1)){
   #------------------------------------------------------
   #Source the hastings and powell function used in 
   #Hastings and Powell 1991
@@ -61,7 +61,7 @@ generate_data <- function(nsamples, seed = 301, ncores = 6,
     parameters <- c(a1 = temp$a1s, a2 = temp$a2s, b1 = temp$b1s,
       b2 = temp$b2s, d1 = temp$d1s, d2 = temp$d2s, F = temp$F)
     
-    times <- seq(.01, 1000, by = .01)
+    # times <- seq(.01, 1000, by = .01)
     out <- ode(y = state, times = times, func = hastings, parms = parameters)
   }, mc.cores = ncores)
 

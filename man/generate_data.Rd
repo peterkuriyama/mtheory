@@ -7,7 +7,7 @@ Based on the Hastings and Powell (1991) equations as used in
 Perretti et al. (2013) in Ecology}
 \usage{
 generate_data(nsamples, seed = 301, ncores = 6, state = c(X = 1, Y = 1, Z
-  = 1))
+  = 1), times = seq(1, 1000, by = 1))
 }
 \arguments{
 \item{nsamples}{Number of samples}
