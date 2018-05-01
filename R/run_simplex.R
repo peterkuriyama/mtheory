@@ -41,10 +41,13 @@ run_simplex <- function(ctl_in, ncores = 6){
   #apply simplex methods
   simplex_list <- apply_simplex_list(E = ctl_in$E, lib = ctl_in$lib, 
     pred = ctl_in$pred, samp_ts = sample_ts)
+simplex_df <- ldply(simplex_list)
+names(simplex_df)[1] <- "iter"
+return(simplex_df)
+
 
 #----------------------------------------------
 #TO DO: Add in test of nonlinearity
 
   #----------------------------------------------
-  return(simplex_list)
 }
