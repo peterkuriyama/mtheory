@@ -95,8 +95,12 @@ generate_data <- function(nsamples, seed = 301, ncores = 6,
   timez <- paste0("times_", paste(range(times), collapse = "_"))
   seedz <- paste0("seed", seed)
   statez <- paste0("state", paste(state, collapse = "_"))
-  filename <- paste0("dat_", timez, "_", seedz, "_", statez, ".Rdata")
+  sampz <- paste0('nsamples', ctl_in$nsamples)
+  # filename <- paste0("dat_", timez, "_", seedz, "_", statez, ".Rdata")
+  filename <- paste0("dat_", timez, "_", seedz, "_", statez, "_",
+    sampz, ".Rdata")
   filename <- paste0("output//", filename)
+  
   save(outs, file = filename)
 
   return(outs)
