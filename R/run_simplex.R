@@ -28,10 +28,11 @@ run_simplex <- function(ctl_in, ncores = 6){
   #If present just load the data
   if(length(grep(filename, list.files("output"))) != 0){
     load(paste0('output//', filename))
-    samps <- outs; rm(outs)  
+    samps <- outs
+    rm(outs)  
   }
   # filename <- paste0("output//", filename)
-
+# browser()
   #----------------------------------------------
   #sample data at some frequency
   sample_ts <- sample_data(data_in = samps, samp_freq = ctl_in$samp_freq)
