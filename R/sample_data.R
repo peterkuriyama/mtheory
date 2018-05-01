@@ -9,7 +9,7 @@
 
 sample_data <- function(samp_freq = 50, data_in = samps){
   #Convert the samples to a list and sample 100 values
-  sample_ts <- split(samps$samps, f = samps$samps$par)
+  sample_ts <- split(data_in$samps, f = data_in$samps$par)
   
   sample_ts <- lapply(sample_ts, FUN = function(xx){
     tt <- dcast(xx, pars + time ~ variable, value.var = 'value')
