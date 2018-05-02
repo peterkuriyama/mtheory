@@ -1,6 +1,7 @@
 #----------------------------------------------------------------------------------------
 #Set working directory and load packages
 setwd("C://Users//Peter//Dropbox//postdoc//calcofi")
+setwd("C://Users//peter.kuriyama//Desktop//mtheory//")
 setwd("/Users/peterkuriyama/Dropbox/postdoc/calcofi/mtheory")
 
 library(devtools)
@@ -25,16 +26,31 @@ library(mtheory)
 #     ylab = "Forecast Skill (rho)")
 ##
 
+
+make_filename <- function(ctl_in){
+
+  timez <- paste0("times_", paste(range(ctl_in$times), collapse = "_"))
+  seedz <- paste0("seed", ctl_in$seed)
+  statez <- paste0("state", paste(ctl_in$state, collapse = "_"))
+  sampz <- paste0('nsamples', ctl_in$nsamples)
+  filename <- paste0(timez, "_", seedz, "_", statez, "_",
+    sampz)
+  return(filename)
+}
+
 #-----------------------
 #Sample every 10 values
-ctl <- mtheory_ctl(seed = 500, nsamples = 12, state = c(X = 1, Y = 1, Z = 1), 
+ctl <- mtheory_ctl(seed = 500, nsamples = 27, state = c(X = 1, Y = 1, Z = 1), 
   times = seq(1, 5000, by = 1), samp_freq = 10, E = 2:8, lib = c(1, 100),
   pred = c(1, 100))
-samp10 <- run_simplex(ctl_in = ctl, ncores = 6)
-samp10 %>% ggplot() + geom_line(aes(x = E, y = rho, colour = variable)) + 
+samp10 <- run_simplex(ctl_in = ctl, ncores = 9)
+
+samp10 %>% ggplot() + geom_line(aes(x = E, y = rho, colour = variable), size = 1.5) + 
   facet_wrap(~ iter) + ggtitle(paste0("Predictive ability; sampled every ", 
     ctl$samp_freq, ' values')) + ylim(c(-.25, 1)) + 
-  geom_hline(yintercept = 0, lty = 2) +
+  geom_hline(yintercept = 0, lty = 2) 
+
+  +
   ggsave(filename = paste0("figs//", make_filename(ctl_in = ctl),
     '_samp_freq', ctl$samp_freq, ".png"))
 
