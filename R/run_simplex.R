@@ -32,7 +32,7 @@ run_simplex <- function(ctl_in, ncores = 6){
     rm(outs)  
   }
   # filename <- paste0("output//", filename)
-# browser()
+
   #----------------------------------------------
   #sample data at some frequency
   sample_ts <- sample_data(data_in = samps, samp_freq = ctl_in$samp_freq)
@@ -41,10 +41,14 @@ run_simplex <- function(ctl_in, ncores = 6){
   #apply simplex methods
   simplex_list <- apply_simplex_list(E = ctl_in$E, lib = ctl_in$lib, 
     pred = ctl_in$pred, samp_ts = sample_ts)
-simplex_df <- ldply(simplex_list)
-names(simplex_df)[1] <- "iter"
-return(simplex_df)
+  simplex_df <- ldply(simplex_list)
+  names(simplex_df)[1] <- "iter"
 
+  #Order the iterations
+  simplex_df$iter <- as.numeric(simplex_df$iter)
+  simplex_df <- simplex_df[order(simplex_df$iter), ] 
+
+  return(simplex_df)
 
 #----------------------------------------------
 #TO DO: Add in test of nonlinearity
