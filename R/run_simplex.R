@@ -70,17 +70,7 @@ run_simplex <- function(ctl_in, ncores = 6){
   nonlinear <- ldply(nonlinear)
   nonlinear$iter <- best_rho[nonlinear$iter, 'iter']
 
-
-
-# ggplot(nonlinear) + geom_line(aes(x = theta, y = rho, colour = variable)) +
-#   facet_wrap(~ iter, scales = 'free')
-
-# browser()
   return(list(samples = sample_ts_df, simplex_df = simplex_df,
     pred_decay = pred_decay, nonlinear = nonlinear))
 
-#----------------------------------------------
-#TO DO: Add in test of nonlinearity
-
-  #----------------------------------------------
 }
