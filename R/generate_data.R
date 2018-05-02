@@ -88,6 +88,7 @@ generate_data <- function(nsamples, seed = 301, ncores = 6,
   samps1 <- plyr::rename(samps1, c(".id" = 'pars'))
 
   samps1 <- melt(samps1, id.vars = c('pars', 'time'))
+  samps1$pars <- as.numeric(samps1$pars)
 
   outs <- list(pars = pars, samps = samps1)  
 
@@ -100,7 +101,7 @@ generate_data <- function(nsamples, seed = 301, ncores = 6,
   filename <- paste0("dat_", timez, "_", seedz, "_", statez, "_",
     sampz, ".Rdata")
   filename <- paste0("output//", filename)
-  
+
   save(outs, file = filename)
 
   return(outs)
