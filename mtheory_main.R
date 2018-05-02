@@ -26,49 +26,59 @@ library(mtheory)
 ##
 
 #-----------------------
-#Generate data for three species
-samps <- generate_data(seed = 500, nsamples = 12, 
-  state = c(X = 1, Y = 1, Z = 1), times = seq(1, 5000, by = 1))
-#samps are formatted this way to facilitate plotting in ggplot
-
-#-----------------------
-#Sample data at some frequency
-sample_ts <- sample_data(data_in = samps, samp_freq = 10)
-
-#-----------------------
-#Use simplex to find best embedding dimension
-simplex_list <- apply_simplex_list(E = 2:8, lib = c(1, 100), pred = c(1, 100), 
-  samp_ts = sample_ts)
-
-
-#-----------------------
-#Function to 
-
-
+#Sample every 10 values
 ctl <- mtheory_ctl(seed = 500, nsamples = 12, state = c(X = 1, Y = 1, Z = 1), 
   times = seq(1, 5000, by = 1), samp_freq = 10, E = 2:8, lib = c(1, 100),
   pred = c(1, 100))
+samp10 <- run_simplex(ctl_in = ctl, ncores = 6)
+samp10 %>% ggplot() + geom_line(aes(x = E, y = rho, colour = variable)) + 
+  facet_wrap(~ iter) + ggtitle(paste0("Predictive ability; sampled every ", 
+    ctl$samp_freq, ' values')) + ylim(c(-.25, 1)) + 
+  geom_hline(yintercept = 0, lty = 2) +
+  ggsave(filename = paste0("figs//", make_filename(ctl_in = ctl),
+    '_samp_freq', ctl$samp_freq, ".png"))
+
+#-----------------------
+#Plot the actual data
+ff <- make_filename(ctl_in = ctl)
+load(paste0('output//dat_', ff, '.Rdata'))
+
+outs[[2]] %>% ggplot(aes(x = time, y = value)) + geom_line(aes(colour = variable)) +
+  facet_wrap(~ pars) + 
+  ggsave(filename = paste0("figs//", make_filename(ctl_in = ctl),
+    '_simdata', ".png"))
+
+#-----------------------
+#Sample every 50 times
+ctl$samp_freq <- 50
+samp50 <- run_simplex(ctl_in = ctl, ncores = 6)
+samp50 %>% ggplot() + geom_line(aes(x = E, y = rho, colour = variable)) + 
+  facet_wrap(~ iter) + ggtitle(paste0("Predictive ability; sampled every ", 
+    ctl$samp_freq, ' values')) + ylim(c(-.25, 1)) + 
+  geom_hline(yintercept = 0, lty = 2)
+  ggsave(filename = paste0("figs//", make_filename(ctl_in = ctl),
+    '_samp_freq', ctl$samp_freq, ".png"))
+
+#-----------------------
+#Sample every 100 times
+ctl$samp_freq <- 100
+samp100 <- run_simplex(ctl_in = ctl, ncores = 6)
+samp100 %>% ggplot() + geom_line(aes(x = E, y = rho, colour = variable)) + 
+  facet_wrap(~ iter) + ggtitle(paste0("Predictive ability; sampled every ", 
+    ctl$samp_freq, ' values')) + ylim(c(-.25, 1)) + 
+  geom_hline(yintercept = 0, lty = 2)
+  ggsave(filename = paste0("figs//", make_filename(ctl_in = ctl),
+    '_samp_freq', ctl$samp_freq, ".png"))
 
 
 
-run_simplex(ctl_in = ctl, ncores = 6)
+samp50 %>% ggplot() + geom_line(aes(x = E, y = rho, colour = variable)) + 
+  facet_wrap(~ iter)
+
+
 
 #-----------------------
 #Identify nonlinearity
-
-
-
-#-------------------------------------------------------------------
-#Plot simplex_list values
-sl1 <- ldply(simplex_list)
-names(sl1)[1] <- 'iter'
-
-sl1 %>% ggplot() + geom_line(aes(colour = variable, x = E, y = rho)) +
-  facet_wrap(~ iter) + ylim(c(0, 1))
-
-ldply
-
-samp_freq <- 50 #sample every 50 values to start
 
 
 #To do
