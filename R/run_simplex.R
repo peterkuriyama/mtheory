@@ -8,13 +8,18 @@
 #' @export
 
 run_simplex <- function(ctl_in, ncores = 6){
-  
+
+  #----------------------------------------------  
+  #Load or generate the data
   samps <- load_dat(ctl_in, ncores = ncores)
 
   #----------------------------------------------
   #sample data at some frequency
   sample_ts <- sample_data(data_in = samps, samp_freq = ctl_in$samp_freq)
-
+  #process sample_ts_df
+  sample_ts_df <- ldply(sample_ts)
+  names(sample_ts_df)[1] <- 'iter'
+  
   #----------------------------------------------
   #apply simplex methods
   simplex_list <- apply_simplex_list(E = ctl_in$E, lib = ctl_in$lib, 
@@ -25,8 +30,8 @@ run_simplex <- function(ctl_in, ncores = 6){
   #Order the iterations
   simplex_df$iter <- as.numeric(simplex_df$iter)
   simplex_df <- simplex_df[order(simplex_df$iter), ] 
-
-  return(simplex_df)
+# browser()
+  return(list(samples = sample_ts_df, simplex_df = simplex_df))
 
 #----------------------------------------------
 #TO DO: Add in test of nonlinearity
