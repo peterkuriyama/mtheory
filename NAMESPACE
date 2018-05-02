@@ -3,6 +3,7 @@
 export(apply_simplex)
 export(apply_simplex_list)
 export(generate_data)
+export(make_filename)
 export(mtheory_ctl)
 export(run_simplex)
 export(sample_data)
