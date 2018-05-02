@@ -30,8 +30,54 @@ run_simplex <- function(ctl_in, ncores = 6){
   #Order the iterations
   simplex_df$iter <- as.numeric(simplex_df$iter)
   simplex_df <- simplex_df[order(simplex_df$iter), ] 
+
+  #----------------------------------------------
+  #Evaluate the decay in prediction skill by using the best E values
+  best_rho <- simplex_df %>% group_by(iter, variable) %>% filter(rho == max(rho)) %>% 
+    as.data.frame
+
+  #Loop over best_rho to calculate pred_decay
+  pred_decay <- lapply(1:nrow(best_rho), FUN = function(xx){
+      temp_rho <- best_rho[xx, ]
+      temp <- sample_ts_df %>% filter(iter == temp_rho$iter)
+  
+      temp_out <- simplex(temp[, temp_rho$variable], tp = 1:10, lib = ctl_in$lib, 
+        pred = ctl_in$pred, E = temp_rho$E)
+      temp_out$iter <- xx
+      temp_out$variable <- temp_rho$variable
+
+      return(temp_out)
+    })
+  pred_decay <- ldply(pred_decay)
+  
+  #Change the iter values
+  pred_decay$iter <- best_rho[pred_decay$iter, 'iter']
+
+  #----------------------------------------------
+  #Identify nonlinearity with Smaps
+  nonlinear <- lapply(1:nrow(best_rho), FUN = function(xx){
+    temp_rho <- best_rho[xx, ]
+    temp <- sample_ts_df %>% filter(iter == temp_rho$iter)
+
+    temp_out <- s_map(temp[, temp_rho$variable], lib = ctl_in$lib,
+      pred = ctl_in$pred, E = temp_rho$E)
+    temp_out$iter <- xx
+    temp_out$variable <- temp_rho$variable
+
+    return(temp_out)
+  })
+
+  nonlinear <- ldply(nonlinear)
+  nonlinear$iter <- best_rho[nonlinear$iter, 'iter']
+
+
+
+# ggplot(nonlinear) + geom_line(aes(x = theta, y = rho, colour = variable)) +
+#   facet_wrap(~ iter, scales = 'free')
+
 # browser()
-  return(list(samples = sample_ts_df, simplex_df = simplex_df))
+  return(list(samples = sample_ts_df, simplex_df = simplex_df,
+    pred_decay = pred_decay, nonlinear = nonlinear))
 
 #----------------------------------------------
 #TO DO: Add in test of nonlinearity
