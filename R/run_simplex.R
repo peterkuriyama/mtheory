@@ -69,8 +69,8 @@ run_simplex <- function(ctl_in, ncores = 6){
 
   nonlinear <- ldply(nonlinear)
   nonlinear$iter <- best_rho[nonlinear$iter, 'iter']
-
+  
   return(list(samples = sample_ts_df, simplex_df = simplex_df,
-    pred_decay = pred_decay, nonlinear = nonlinear))
+    pred_decay = pred_decay, nonlinear = nonlinear, pars = samps[[1]]))
 
 }
