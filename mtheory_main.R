@@ -29,12 +29,35 @@ library(mtheory)
 samps <- load_dat(ctl_in = ctl, ncores = 6)
 
 #-----------------------
-#Sample every 10 values
-ctl <- mtheory_ctl(seed = 500, nsamples = 27, state = c(X = 1, Y = 1, Z = 1), 
+#testing new features
+ctl <- mtheory_ctl(seed = 500, nsamples = 12, state = c(X = 1, Y = 1, Z = 1), 
   times = seq(1, 5000, by = 1), samp_freq = 10, E = 2:8, lib = c(1, 100),
   pred = c(1, 100))
 
-samp10 <- run_simplex(ctl_in = ctl, ncores = 9)
+ctl$pred <- c(401, 500)
+samp10 <- run_simplex(ctl_in = ctl, ncores = 6)
+
+
+
+
+
+
+#----------------------------------------------------------------------------------------
+#Example to look at what happens when sampling data less frequently
+
+#Sample every 10 values
+ctl <- mtheory_ctl(seed = 500, nsamples = 12, state = c(X = 1, Y = 1, Z = 1), 
+  times = seq(1, 5000, by = 1), samp_freq = 10, E = 2:8, lib = c(1, 100),
+  pred = c(1, 100))
+
+ctl$pred <- c(401, 500)
+samp10 <- run_simplex(ctl_in = ctl, ncores = 6)
+
+
+
+
+
+
 
 samp10[[2]] %>% ggplot() + geom_line(aes(x = E, y = rho, colour = variable), size = 1.5) + 
   facet_wrap(~ iter) + ggtitle(paste0("Predictive ability; sampled every ", 
