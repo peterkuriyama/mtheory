@@ -26,20 +26,25 @@ library(mtheory)
 #     ylab = "Forecast Skill (rho)")
 ##
 
-samps <- load_dat(ctl_in = ctl, ncores = 6)
-
 #-----------------------
 #testing new features
 ctl <- mtheory_ctl(seed = 500, nsamples = 12, state = c(X = 1, Y = 1, Z = 1), 
   times = seq(1, 5000, by = 1), samp_freq = 10, E = 2:8, lib = c(1, 100),
   pred = c(1, 100))
 
+samps <- load_dat(ctl_in = ctl, ncores = 6)
+
 ctl$pred <- c(401, 500)
 samp10 <- run_simplex(ctl_in = ctl, ncores = 6)
 
 
+#Add in covariates to reconstruct the simplex
+yy <- multivariate(ctl_in = ctl, dat_in = samp10[[1]], max_lag = 3, 
+  base_column = c("X", "X_1", "X_2"),
+  add_column = c("Y_1"), target_column = "Y")
 
-
+#Calc
+round(yy[[2]]$rho - yy[[1]]$rho, digits = 2)
 
 
 #----------------------------------------------------------------------------------------

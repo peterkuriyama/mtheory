@@ -19,7 +19,7 @@ run_simplex <- function(ctl_in, ncores = 6){
   #process sample_ts_df
   sample_ts_df <- ldply(sample_ts)
   names(sample_ts_df)[1] <- 'iter'
-  
+
   #----------------------------------------------
   #apply simplex methods
   simplex_list <- apply_simplex_list(E = ctl_in$E, lib = ctl_in$lib, 
