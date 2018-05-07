@@ -40,10 +40,9 @@ load_dat <- function(ctl_in, ncores){
     return(tt)
   }
 
-  xx <- samps[[2]] %>% group_by(pars, variable) %>% do({
+  samps[[2]] <- samps[[2]] %>% group_by(pars, variable) %>% do({
     oo <- add_error(tt = .)
   }) %>% as.data.frame
 
-  samps[[2]] <- xx
   return(samps)
 }
