@@ -8,6 +8,7 @@
 #' @export
 
 show_results <- function(samp_input, nrun){
+  #---------------------------------------
   #define multiplot funcion
   multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     library(grid)  
@@ -45,6 +46,7 @@ show_results <- function(samp_input, nrun){
     }
   }  
 
+  #---------------------------------------
   #Plot sampled time series
   d1 <- samp_input$samples %>% melt(id.vars = c('iter', 'pars', 'time'))
   d1$iter <- as.numeric(d1$iter)
