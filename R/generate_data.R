@@ -40,7 +40,7 @@ generate_data <- function(nsamples, seed = 301, ncores = 6,
 
   #------------------------------------------------------
   #Range of parameters
-  set.seed(seed)
+
 
   a1s <- runif(nsamples, min = 3.5, max = 6.5)
   a2s <- runif(nsamples, min = .07, max = .13)
