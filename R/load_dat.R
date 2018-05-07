@@ -16,6 +16,7 @@ load_dat <- function(ctl_in, ncores){
   filename <- paste0("dat_", timez, "_", seedz, "_", statez, "_",
     sampz, ".Rdata")
   
+  set.seed(ctl_in$seed) #Set seed above the data generation
   #----------------------------------------------
   #Generate data if not already present
   if(length(grep(filename, list.files("output"))) == 0){
