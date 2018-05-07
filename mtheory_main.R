@@ -37,7 +37,6 @@ samps <- load_dat(ctl_in = ctl, ncores = 6)
 ctl$pred <- c(401, 500)
 samp10 <- run_simplex(ctl_in = ctl, ncores = 6)
 
-
 #Add in covariates to reconstruct the simplex
 yy <- multivariate(ctl_in = ctl, dat_in = samp10[[1]], max_lag = 3, 
   base_column = c("X", "X_1", "X_2"),
@@ -45,6 +44,10 @@ yy <- multivariate(ctl_in = ctl, dat_in = samp10[[1]], max_lag = 3,
 
 #Calc
 round(yy[[2]]$rho - yy[[1]]$rho, digits = 2)
+
+#----------------------------------------------------------------------------------------
+#Visualize the time series and the single variable
+show_results(samp_input = samp10, nrun = 1)
 
 
 #----------------------------------------------------------------------------------------
