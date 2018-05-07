@@ -30,5 +30,20 @@ load_dat <- function(ctl_in, ncores){
     samps <- outs
     rm(outs)  
   }
+  
+  #----------------------------------------------
+  #Add error to the time series
+  #Define add_error function
+  add_error <- function(tt){
+    tt$value <- tt$value + rnorm(length(tt$value),
+      sd = sd(tt$value) * ctl_in$error_sd)
+    return(tt)
+  }
+
+  xx <- samps[[2]] %>% group_by(pars, variable) %>% do({
+    oo <- add_error(tt = .)
+  }) %>% as.data.frame
+
+  samps[[2]] <- xx
   return(samps)
 }
