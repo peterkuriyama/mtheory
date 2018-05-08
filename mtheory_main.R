@@ -28,24 +28,27 @@ library(mtheory)
 
 #-----------------------
 #One simulation, sampling every 10 values
+
+#Add error to the time series
+
 ctl <- mtheory_ctl(seed = 500, nsamples = 18, state = c(X = 1, Y = 1, Z = 1), 
-  times = seq(1, 5000, by = 1), samp_freq = 10, E = 2:8, lib = c(201, 300),
-  pred = c(1, 100))
+  times = seq(1, 5000, by = 1), samp_freq = 10, E = 2:8, lib = c(301, 375),
+  pred = c(476, 500), error_sd = .2)
 
 samps <- load_dat(ctl_in = ctl, ncores = 6)
 
-ctl$pred <- c(301, 400)
+# ctl$pred <- c(301, 400)
 samp10 <- run_simplex(ctl_in = ctl, ncores = 6)
 
 #Visualize the time series and the single variable
-pdf(width = 7, height = 7, file = 'figs/samp_plots_every10.pdf')
+pdf(width = 7, height = 7, file = 'figs/samp_plots_every1_error.pdf')
 for(ii in 1:length(unique(samp10[[1]]$iter))){
   show_results(samp_input = samp10, nrun = ii)  
 }
 dev.off()
 
 
-
+#-----------------------
 #Add in covariates to reconstruct the simplex
 yy <- multivariate(ctl_in = ctl, dat_in = samp10[[1]], max_lag = 3, 
   base_column = c("X", "X_1", "X_2"),
